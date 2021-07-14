@@ -7,13 +7,16 @@ const TodoList = () => {
 		"Do Laundry",
 		"Catch up on my Videos"
 	]);
-	const [xIsShown, setXIsShown] = useState(false);
+	const [xIsShown, setXIsShown] = useState({ state: false, index: 0 });
 	const [isShown, setIsShown] = useState(false);
+	const [countThingsToDo, setcountThingsToDo] = useState(false);
 
-	// let handleXToggle = () => setState({ showBox: !this.state.showBox });
+	const deleteItem = listIndex => {
+		let makeNewList = todos.filter((item, i) => listIndex != i);
+		setTodos(makeNewList);
+	};
 
 	let makeList = todos.map((item, i) => {
-		console.log(i);
 		const toDosShadow = {
 			alignItems: "center",
 			overflow: "hidden",
@@ -33,21 +36,21 @@ const TodoList = () => {
 			<ul
 				key={i}
 				style={toDosShadow}
-				className="row list-inline m-2"
-				onMouseEnter={() => setXIsShown(true)}
-				onMouseLeave={() => setXIsShown(false)}>
-				<li className="col-6 list-inline-item list-group-item-light">
-					{item}
-				</li>
-				{xIsShown && (
-					<button
+				className="col m-2 mx-auto inline-block list-group-item-light"
+				onMouseEnter={() => setXIsShown({ state: true, index: i })}
+				onMouseLeave={() => setXIsShown({ state: false, index: 0 })}>
+				{item}
+				{xIsShown.state == true && xIsShown.index == i ? (
+					<ul
+						onClick={() => deleteItem(i)} // Needs to be arrow fnc to not run immediately
 						key={i}
-						className="col-1 list-inline-item list-group-item-light float-right">
+						className="col-1 inline-block list-group-item-light float-right btn-danger">
 						X
-					</button>
+					</ul>
+				) : (
+					""
 				)}
 			</ul>
-			// </ul>
 		);
 	});
 
@@ -65,6 +68,12 @@ const TodoList = () => {
 		borderRadius: "10px",
 		boxShadow:
 			"rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px"
+	};
+
+	const countOfListItems = () => {
+		if (todos.length > 0) {
+			`${todos.length} Things Left To Do`;
+		}
 	};
 
 	return (
@@ -85,6 +94,7 @@ const TodoList = () => {
 			/>
 			<ul className="m-2 p-2" style={listOfToDosShadow}>
 				{makeList}
+				{countOfListItems}
 			</ul>
 
 			<div className="App center">
